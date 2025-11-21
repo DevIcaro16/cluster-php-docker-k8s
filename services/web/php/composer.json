@@ -1,6 +1,7 @@
 {
     "name": "devicaro/php-docker-k8s",
     "description": "cluster php/nginx and databases MySQL/Redis with docker and K8S",
+    "license": "proprietary",
     "autoload": {
         "psr-4": {
             "Devicaro\\PhpDockerK8s\\": "src/"
