@@ -1,0 +1,83 @@
+version: "3.8"
+
+services:
+  mysql-docker-k8s-service:
+    build:
+      context: ./services/database/mysql
+      dockerfile: Dockerfile
+    image: mysql-docker-k8s-image:v1
+    container_name: mysql_docker_k8s_container
+    env_file:
+      - ./services/database/mysql/.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-docker-k8s-service-volume:/var/lib/mysql
+    networks:
+      app_network:
+        ipv4_address: 10.10.0.100 # IP for MySQL
+
+  php-docker-k8s-service:
+    build:
+      context: ./services/web/php
+      dockerfile: Dockerfile
+    image: php-docker-k8s-image:v1
+    container_name: php_docker_k8s_container
+    working_dir: /var/www/html
+    env_file:
+      - ./services/web/php/.env
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./services/web/php:/var/www/html
+      - ./services/web/php/vendor:/var/www/html/vendor
+    depends_on:
+      - mysql-docker-k8s-service
+    networks:
+      app_network:
+        ipv4_address: 10.10.0.101 # IP for PHP
+
+  nginx-docker-k8s-service:
+    build:
+      context: ./services/web/nginx
+      dockerfile: Dockerfile
+    image: nginx-docker-k8s-image:v1
+    container_name: nginx_docker_k8s_container
+    working_dir: /var/www/html
+    env_file:
+      - ./services/web/nginx/.env
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - php-docker-k8s-service
+    networks:
+      app_network:
+        ipv4_address: 10.10.0.102 # IP for Nginx
+
+  redis-docker-k8s-service:
+    build:
+      context: ./services/database/redis
+      dockerfile: Dockerfile
+    image: redis-docker-k8s-image:v1
+    container_name: redis_docker_k8s_container
+    env_file:
+      - ./services/database/redis/.env
+    ports:
+      - "6380:6379"  # Host port 6380 mapped to Redis container's default port 6379
+    networks:
+      app_network:
+        ipv4_address: 10.10.0.103 # IP for redis
+
+volumes:
+  mysql-docker-k8s-service-volume:
+
+networks:
+  app_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "10.10.0.0/24" # subnet for the network
+          gateway: "10.10.0.1" # gateway for the subnet
+    external: false

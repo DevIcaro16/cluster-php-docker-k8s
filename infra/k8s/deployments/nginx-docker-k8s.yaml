@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-docker-k8s-service
+  labels:
+    app: nginx-docker-k8s-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-docker-k8s-service
+  template:
+    metadata:
+      labels:
+        app: nginx-docker-k8s-service
+    spec:
+      containers:
+        - name: nginx-docker-k8s-service
+          image: devicaro18/nginx-docker-k8s-image:v1
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m" # min CPU (100 millicores = 0.1 CPU core)
+              memory: "128Mi" # 128 Mebibytes -> +/- 134MB
+            limits:
+              cpu: "500m" # max CPU (500 millicores = 0.5 CPU core)
+              memory: "256Mi" # 256 Mebibytes -> +/- 268MB
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3

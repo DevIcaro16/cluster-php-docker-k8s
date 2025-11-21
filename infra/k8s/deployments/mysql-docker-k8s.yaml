@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-docker-k8s-service
+  labels:
+    app: mysql-docker-k8s-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-docker-k8s-service
+  template:
+    metadata:
+      labels:
+        app: mysql-docker-k8s-service
+    spec:
+      containers:
+        - name: mysql-docker-k8s-service
+          image: devicaro18/mysql-docker-k8s-image:v1
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - secretRef:
+                name: mysql-docker-k8s-service-secret
+          volumeMounts:
+            - name: mysql-docker-k8s-service-volume
+              mountPath: /var/lib/mysql
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+          readinessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+      volumes:
+        - name: mysql-docker-k8s-service-volume
+          persistentVolumeClaim:
+            claimName: mysql-docker-k8s-servic-pvc

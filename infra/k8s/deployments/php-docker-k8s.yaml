@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-docker-k8s-service
+  labels:
+    app: php-docker-k8s-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php-docker-k8s-service
+  template:
+    metadata:
+      labels:
+        app: php-docker-k8s-service
+    spec:
+      containers:
+        - name: php-docker-k8s-service
+          image: devicaro18/php-docker-k8s-image:v1
+          ports:
+            - containerPort: 9000
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3

@@ -1,0 +1,7 @@
+CREATE DATABASE IF NOT EXISTS mysql_docker_k8s_service_database;
+
+CREATE USER IF NOT EXISTS 'user'@'%' IDENTIFIED BY 'password';
+
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'%' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
