@@ -65,14 +65,15 @@ jobs:
 
       - name: Push services/PHP Docker image to Docker Hub
         run: |
-          docker tag php-docker-k8s:v1 ${{ secrets.DOCKER_USERNAME }}/php-docker-k8s:v1
-          docker push ${{ secrets.DOCKER_USERNAME }}/php-docker-k8s:v1
+          docker tag php-docker-k8s-image:v1 ${{ secrets.DOCKER_USERNAME }}/php-docker-k8s-image:v1
+          docker push ${{ secrets.DOCKER_USERNAME }}/php-docker-k8s-image:v1
+
         timeout-minutes: 5
 
       - name: Push services/PHP Docker image to GHCR
         run: |
-          docker tag php-docker-k8s:v1 ghcr.io/${{ github.repository_owner }}/php-docker-k8s:v1
-          docker push ghcr.io/${{ github.repository_owner }}/php-docker-k8s:v1
+          docker tag php-docker-k8s-image:v1 ghcr.io/${{ github.repository_owner }}/php-docker-k8s:v1
+          docker push ghcr.io/${{ github.repository_owner }}/php-docker-k8s-image:v1
         timeout-minutes: 5
 
       - name: Build services/Nginx Docker image
