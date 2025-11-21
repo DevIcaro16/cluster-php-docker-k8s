@@ -75,7 +75,7 @@ jobs:
 
       - name: Push services/PHP Docker image to GHCR
         run: |
-          docker tag php-docker-k8s-image:v1 ghcr.io/${{ env.IMAGE_OWNER }}/php-docker-k8s:v1
+          docker tag php-docker-k8s-image:v1 ghcr.io/${{ env.IMAGE_OWNER }}/php-docker-k8s-image:v1
           docker push ghcr.io/${{ env.IMAGE_OWNER }}/php-docker-k8s-image:v1
         timeout-minutes: 5
 
