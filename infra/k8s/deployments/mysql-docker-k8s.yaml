@@ -44,4 +44,4 @@ spec:
       volumes:
         - name: mysql-docker-k8s-service-volume
           persistentVolumeClaim:
-            claimName: mysql-docker-k8s-servic-pvc
+            claimName: mysql-docker-k8s-service-pvc
